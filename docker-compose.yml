@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  oracle-bot:
+    build: .
+    container_name: oracle-bot
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8080:8080"   # Health check endpoint
+    volumes:
+      - ./ml_models:/app/ml_models
+      - ./historical_data:/app/historical_data
+      - ./signals_log.csv:/app/signals_log.csv
+      - ./trade_journal.csv:/app/trade_journal.csv
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  dashboard:
+    build: .
+    container_name: oracle-dashboard
+    restart: unless-stopped
+    env_file: .env
+    command: python dashboard.py
+    ports:
+      - "5000:5000"   # Dashboard UI
+    depends_on:
+      - oracle-bot
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
