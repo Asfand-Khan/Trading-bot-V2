@@ -24,7 +24,7 @@ services:
     env_file: .env
     command: python dashboard.py
     ports:
-      - "5000:5000"   # Dashboard UI
+      - "5001:5000"   # Dashboard UI
     depends_on:
       - oracle-bot
     logging:
